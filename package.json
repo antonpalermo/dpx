@@ -1,0 +1,16 @@
+{
+  "name": "node-dpx",
+  "version": "1.0.0",
+  "description": "dragonpay api for node",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "dpx",
+    "node-dpx",
+    "dragonpay",
+    "node-dragonpay"
+  ],
+  "author": "anpbusinessmail@gmail.com",
+  "license": "MIT"
+}
