@@ -14,8 +14,12 @@
   "author": "anpbusinessmail@gmail.com",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^22.0.2",
     "prettier": "^3.3.3",
     "tsup": "^8.2.3",
     "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
   }
 }
