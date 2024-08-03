@@ -61,7 +61,7 @@ export class CollectionClient {
     }
   }
 
-  async getTransactionByTxnId(
+  async getTransactionByTxnid(
     txnid: string,
   ): Promise<TransactioDetails | string> {
     try {
