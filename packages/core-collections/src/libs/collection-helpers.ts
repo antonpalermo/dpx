@@ -3,6 +3,7 @@ import { btoa } from "node:buffer";
 
 import { TransactioDetails } from "@/types/transaction-details";
 import { TransactionResponse } from "@/types/transcation-response";
+import { CancellationReponse } from "@/types/cancellation-response";
 
 export type CollectionClientOptions = {
   /**
@@ -49,18 +50,7 @@ export function createCollectionClient({
   const isDev = process.env.NODE_ENV === "development";
 
   const options = {
-    /**
-     *
-     *
-     *
-     */
     authorization: "Basic " + btoa(`${merchantId}:${apiKey}`),
-
-    /**
-     *
-     *
-     *
-     */
     apiEndpoint: `https://${isDev ? "test" : "gw"}.dragonpay.ph/api/collect/${version}`,
   };
 
@@ -93,17 +83,84 @@ export function createCollectionClient({
     }
   }
 
-  async function cancelTxn(txnid: string) {}
+  /**
+   *
+   * @param txnid reference id of the transaction you want to cancel
+   * @returns
+   */
+  async function cancelTxn(
+    txnid: string,
+  ): Promise<CancellationReponse | string> {
+    try {
+      const request = await fetch(`${options.apiEndpoint}/void/${txnid}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: options.authorization,
+        },
+      });
 
-  async function getTxnByRefno(refno: string) {}
+      return (await request.json()) as CancellationReponse;
+    } catch (error) {
+      throw new Error("error: failed to void transaction");
+    }
+  }
 
-  async function getTxnByTxnid(txnid: string) {}
+  /**
+   *
+   * Return all the details regarding with the provided refno.
+   *
+   * @param refno reference numbers that you want to get
+   * @returns transaction details of the providede reference number.
+   */
+  async function getTxnByRefno(refno: string) {
+    try {
+      const request = await fetch(`${options.apiEndpoint}/refno/${refno}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: options.authorization,
+        },
+      });
+
+      return (await request.json()) as CancellationReponse;
+    } catch (error) {
+      throw new Error("error: failed to void transaction");
+    }
+  }
+
+  /**
+   *
+   * Return all the details regarding with the provided txnid.
+   *
+   * @param txnid transaction id of the transaction you want to get.
+   * @returns transaction details of the provided transaction id.
+   */
+  async function getTxnByTxnid(txnid: string) {
+    try {
+      const request = await fetch(`${options.apiEndpoint}/txnid/${txnid}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: options.authorization,
+        },
+      });
+
+      return (await request.json()) as CancellationReponse;
+    } catch (error) {
+      throw new Error("error: failed to void transaction");
+    }
+  }
 
   async function createLID(data: any) {}
 
   async function createMUVA(data: any) {}
 
-  async function deactivateLID(lid: string) {}
+  async function deactivate(lid: string) {}
 
-  return { createTxn };
+  return {
+    createTxn,
+    cancelTxn,
+    getTxnByRefno,
+    getTxnByTxnid,
+    createLID,
+    createMUVA,
+  };
 }
