@@ -149,18 +149,10 @@ export function createCollectionClient({
     }
   }
 
-  async function createLID(data: any) {}
-
-  async function createMUVA(data: any) {}
-
-  async function deactivate(lid: string) {}
-
   return {
     createTxn,
     cancelTxn,
     getTxnByRefno,
     getTxnByTxnid,
-    createLID,
-    createMUVA,
   };
 }
