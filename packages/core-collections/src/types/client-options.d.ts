@@ -18,7 +18,7 @@ export type ClientOptions = {
    * API version default would be v1
    *
    */
-  version: "v1" | "v2";
+  version?: "v1" | "v2";
 
   /**
    *

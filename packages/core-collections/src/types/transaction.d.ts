@@ -3,7 +3,8 @@ export type TransactionDetails = {
   currency: "PHP" | "USD";
   description: string;
   email: string;
-  mobileNo: string;
+  procId?: string;
+  mobileNo?: string;
   param1?: any;
   param2?: any;
   expiry?: Date;
@@ -12,15 +13,12 @@ export type TransactionDetails = {
 export type Transaction =
   | (TransactionDetails & {
       procId?: "CC";
-      billingDetails: BillingInfo;
+      billingDetails?: BillingInfo;
     })
   | (TransactionDetails & {
       procId?: "LBCX";
-      senderShippingDetails: ShippingInfo;
-      recipientShippingDetails: ShippingInfo;
-    })
-  | (TransactionDetails & {
-      procId?: string;
+      senderShippingDetails?: ShippingInfo;
+      recipientShippingDetails?: ShippingInfo;
     });
 
 export type BillingInfo = {
