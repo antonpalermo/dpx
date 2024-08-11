@@ -1,9 +1,9 @@
-import fetch from "node-fetch";
+import axios from "axios";
 
 import { endpoint } from "@/utils";
+import { toBase64 } from "@/libs/base64";
 import { Transaction } from "@/types/transaction";
 import { ClientOptions } from "@/types/client-options";
-import { toBase64 } from "./base64";
 import { TransactionResponse } from "@/types/transcation-response";
 
 export class CollectionClient {
@@ -21,20 +21,25 @@ export class CollectionClient {
     merchantId: ""
   };
 
-  private collectEndpoint = `${endpoint}/api/collect/${this.options.version}`;
+  private baseURL = `${endpoint}/${this.options.version}`;
+
+  private axiosClient = axios.create({
+    baseURL: this.baseURL,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Basic ${toBase64(`${this.options.merchantId}:${this.options.apiKey}`)}`
+    }
+  });
 
   public async createTransaction(txnId: string, payload: Transaction) {
     try {
-      const request = await fetch(`${this.collectEndpoint}/${txnId}/post`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Basic ${toBase64(`${this.options.merchantId}:${this.options.apiKey}`)}`
-        },
-        body: JSON.stringify(payload)
-      });
+      // const request = await this.axiosClient.post(`/${txnId}/post`, payload);
+      // console.log(request.status)
+      // console.log(request.data)
 
-      return (await request.json()) as TransactionResponse;
+      console.log(toBase64(`${this.options.merchantId}:${this.options.apiKey}`))
+
+      return "ok";
     } catch (error) {
       console.log(error);
     }
