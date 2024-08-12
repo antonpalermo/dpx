@@ -1,3 +1,5 @@
+import { v4 as uuid } from "uuid";
+
 export const errorCodes = {
   "000": "Success",
   "101": "Invalid payment gateway id",
@@ -13,20 +15,25 @@ export const errorCodes = {
   "111": "Security Error",
   "112": "Invalid parameters",
   "201": "Invalid Merchant Id",
-  "202": "Invalid Merchant Password",
-}
+  "202": "Invalid Merchant Password"
+};
 
 export const statusCodes = {
-  "S": "Success",
-  "F": "Failure",
-  "P": "Pending",
-  "U": "Unknown",
-  "V": "Void"
-}
+  S: "Success",
+  F: "Failure",
+  P: "Pending",
+  U: "Unknown",
+  V: "Void"
+};
 
 const urls = {
   uat: "https://test.dragonpay.ph/api/collect",
   prod: "https://gw.dragonpay.ph/api/collect"
-}
+};
 
-export const endpoint = process.env.NODE_ENV === 'development' ? urls.uat : urls.prod
+export const endpoint =
+  process.env.NODE_ENV === "development" ? urls.uat : urls.prod;
+
+export function generateTxnID() {
+  return uuid().split("-").join("");
+}
