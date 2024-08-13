@@ -1,4 +1,4 @@
-import { toBase64 } from "@/libs/base64";
+import { toBase64 } from "@/utils";
 
 test("toBase64() should return a base64 string", () => {
   const regex =

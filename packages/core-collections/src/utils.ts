@@ -1,3 +1,4 @@
+import { Buffer } from "node:buffer";
 import { v4 as uuid } from "uuid";
 
 export const errorCodes = {
@@ -36,4 +37,8 @@ export const endpoint =
 
 export function generateTxnID() {
   return uuid().split("-").join("");
+}
+
+export function toBase64(value: string) {
+  return Buffer.from(value).toString("base64");
 }
