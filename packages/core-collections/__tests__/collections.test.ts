@@ -1,19 +1,25 @@
 import { generateTxnID } from "@/utils";
 import { CollectionClient } from "@/libs/collections";
 
-describe("collection v1", () => {
-  const client = new CollectionClient({
-    apiKey: `${process.env.MERCHANT_COLLECTION_API_KEY}`,
-    merchantId: `${process.env.MERCHANT_ID}`
-  });
+const client1 = new CollectionClient({
+  apiKey: `${process.env.MERCHANT_COLLECTION_API_KEY}`,
+  merchantId: `${process.env.MERCHANT_ID}`
+});
 
+const client2 = new CollectionClient({
+  apiKey: `${process.env.MERCHANT_COLLECTION_API_KEY}`,
+  merchantId: `${process.env.MERCHANT_ID}`,
+  version: "v2"
+});
+
+describe("collection v1", () => {
   test("collection client version 1 should be defined", () => {
-    expect(client).toBeDefined();
+    expect(client1).toBeDefined();
   });
 
   test("able to create a simple transaction on api version 1", async () => {
     const transactionId = generateTxnID();
-    const txn = await client.createTransaction(transactionId, {
+    const txn = await client1.createTransaction(transactionId, {
       amount: 1.0,
       currency: "PHP",
       description: "sample transaction",
@@ -32,19 +38,13 @@ describe("collection v1", () => {
 });
 
 describe("collection v2", () => {
-  const client = new CollectionClient({
-    apiKey: `${process.env.MERCHANT_COLLECTION_API_KEY}`,
-    merchantId: `${process.env.MERCHANT_ID}`,
-    version: "v2"
-  });
-
   test("collection client version 2 should be defined", () => {
-    expect(client).toBeDefined();
+    expect(client2).toBeDefined();
   });
 
   test("able to create a simple transaction on api version 1", async () => {
     const transactionId = generateTxnID();
-    const txn = await client.createTransaction(transactionId, {
+    const txn = await client2.createTransaction(transactionId, {
       amount: 1.0,
       currency: "PHP",
       description: "sample transaction",
@@ -63,5 +63,16 @@ describe("collection v2", () => {
     };
 
     expect(txn).toMatchObject(expectedObj);
+  });
+
+  test("should able to get transcation details using refno", async () => {
+    const transactionId = generateTxnID();
+    const txn = await client2.createTransaction(transactionId, {
+      amount: 1.0,
+      currency: "PHP",
+      description: "sample transaction",
+      email: `${process.env.EMAIL}`,
+      procId: "BOG"
+    });
   });
 });

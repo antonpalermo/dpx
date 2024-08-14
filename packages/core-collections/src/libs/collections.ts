@@ -11,7 +11,7 @@ export class CollectionClient {
 
   constructor({ apiKey, merchantId, version = "v1" }: ClientOptions) {
     this.axios = axiosClient.create({
-      baseURL: `https://test.dragonpay.ph/api/collect/${version}`,
+      baseURL: `https://${process.env.NODE_ENV === "development" ? "test" : "gw"}.dragonpay.ph/api/collect/${version}`,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Basic ${toBase64(`${merchantId}:${apiKey}`)}`
@@ -23,6 +23,24 @@ export class CollectionClient {
     try {
       const response = await this.axios.post(`/${txnId}/post`, payload);
       return response.data as TransactionResponse;
+    } catch (error) {
+      if (error instanceof AxiosError) return error.message;
+    }
+  }
+
+  public async getTranscationByRefno(refno: string) {
+    try {
+      const response = await this.axios.get(`/refno/${refno}`);
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) return error.message;
+    }
+  }
+
+  public async getTranscationByTxnId(txnId: string) {
+    try {
+      const response = await this.axios.get(`/txnid/${txnId}`);
+      return response.data;
     } catch (error) {
       if (error instanceof AxiosError) return error.message;
     }
