@@ -74,5 +74,32 @@ describe("collection v2", () => {
       email: `${process.env.EMAIL}`,
       procId: "BOG"
     });
+
+    const expectedObj = {
+      RefNo: expect.any(String),
+      MerchantId: expect.any(String),
+      TxnId: expect.any(String),
+      RefDate: expect.any(String),
+      Amount: expect.any(Number),
+      Currency: expect.any(String),
+      Description: expect.any(String),
+      Status: expect.any(String),
+      Email: expect.any(String),
+      MobileNo: expect.any(String),
+      ProcId: expect.any(String),
+      ProcMsg: expect.any(String),
+      SettleDate: expect.any(String),
+      Param1: expect.any(String),
+      Param2: expect.any(String),
+      Fee: expect.any(Number)
+    };
+
+    if (txn) {
+      const refno = txn.RefNo;
+      // TODO: use dynamic refs here.
+      const txnDetails = await client2.getTranscationByRefno("YN96PSC7T7");
+
+      expect(txnDetails).toMatchObject(expectedObj);
+    }
   });
 });

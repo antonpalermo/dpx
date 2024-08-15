@@ -5,6 +5,7 @@ import { toBase64 } from "@/utils";
 import { Transaction } from "@/types/transaction";
 import { ClientOptions } from "@/types/client-options";
 import { TransactionResponse } from "@/types/transcation-response";
+import { TransactioDetails } from "@/types/transaction-details";
 
 export class CollectionClient {
   private axios: AxiosInstance;
@@ -21,19 +22,24 @@ export class CollectionClient {
 
   public async createTransaction(txnId: string, payload: Transaction) {
     try {
-      const response = await this.axios.post(`/${txnId}/post`, payload);
-      return response.data as TransactionResponse;
+      const response = await this.axios.post<TransactionResponse>(
+        `/${txnId}/post`,
+        payload
+      );
+      return response.data;
     } catch (error) {
-      if (error instanceof AxiosError) return error.message;
+      if (error instanceof AxiosError) throw error.message;
     }
   }
 
   public async getTranscationByRefno(refno: string) {
     try {
-      const response = await this.axios.get(`/refno/${refno}`);
+      const response = await this.axios.get<TransactioDetails>(
+        `/refno/${refno}`
+      );
       return response.data;
     } catch (error) {
-      if (error instanceof AxiosError) return error.message;
+      if (error instanceof AxiosError) throw error.message;
     }
   }
 

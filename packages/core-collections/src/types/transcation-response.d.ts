@@ -1,6 +1,6 @@
 export type TransactionResponse = {
-  refno: string;
-  status: string;
-  message: string;
-  url: string;
+  RefNo: string;
+  Status: string;
+  Message: string;
+  Url: string;
 };
