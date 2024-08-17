@@ -103,4 +103,20 @@ describe("collection v2", () => {
       expect(txnDetails).toMatchObject(expectedTxnDetailsObj);
     }
   });
+
+  test("should able to get transaction details using txnid", async () => {
+    const transactionId = generateTxnID();
+    const txn = await client2.createTransaction(transactionId, {
+      amount: 1.0,
+      currency: "PHP",
+      description: "sample transaction",
+      email: `${process.env.EMAIL}`,
+      procId: "BOG"
+    });
+
+    if (txn) {
+      const txnDetails = await client2.getTranscationByTxnId(transactionId);
+      expect(txnDetails).toMatchObject(expectedTxnDetailsObj);
+    }
+  });
 });
