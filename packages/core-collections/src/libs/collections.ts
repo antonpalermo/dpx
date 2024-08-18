@@ -51,4 +51,13 @@ export class CollectionClient {
       if (error instanceof AxiosError) return error.message;
     }
   }
+
+  public async cancelTransaction(txnId: string) {
+    try {
+      const response = await this.axios.get(`/void/${txnId}`);
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) return error.message;
+    }
+  }
 }

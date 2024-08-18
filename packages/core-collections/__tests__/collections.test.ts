@@ -119,4 +119,25 @@ describe("collection v2", () => {
       expect(txnDetails).toMatchObject(expectedTxnDetailsObj);
     }
   });
+
+  test("should be able to void transaction", async () => {
+    const transactionId = generateTxnID();
+    const txn = await client2.createTransaction(transactionId, {
+      amount: 1.0,
+      currency: "PHP",
+      description: "sample transaction",
+      email: `${process.env.EMAIL}`,
+      procId: "BOG"
+    });
+
+    const expectedVoidObj = {
+      Status: expect.any(Number),
+      Message: expect.any(String)
+    };
+
+    if (txn) {
+      const state = await client2.cancelTransaction(transactionId);
+      expect(state).toMatchObject(expectedVoidObj);
+    }
+  });
 });
