@@ -20,6 +20,14 @@ export class CollectionClient {
     });
   }
 
+  /**
+   *
+   * Create a simple transaction.
+   *
+   * @param txnId id that will be use to referenced a specific transaction.
+   * @param payload data that Dragonpay will processed.
+   * @returns transaction details.
+   */
   public async createTransaction(txnId: string, payload: Transaction) {
     try {
       const response = await this.axios.post<TransactionResponse>(
@@ -32,6 +40,13 @@ export class CollectionClient {
     }
   }
 
+  /**
+   *
+   * Get transaction details using reference number.
+   *
+   * @param refno reference number of a specific transaction.
+   * @returns transaction details.
+   */
   public async getTranscationByRefno(refno: string) {
     try {
       const response = await this.axios.get<TransactioDetails>(
@@ -43,6 +58,13 @@ export class CollectionClient {
     }
   }
 
+  /**
+   *
+   * Get transaction details using transaction id.
+   *
+   * @param txnId transaction id of a specific transaction.
+   * @returns transaction details.
+   */
   public async getTranscationByTxnId(txnId: string) {
     try {
       const response = await this.axios.get(`/txnid/${txnId}`);
@@ -52,6 +74,13 @@ export class CollectionClient {
     }
   }
 
+  /**
+   *
+   * Voids transaction using transaction id
+   *
+   * @param txnId transaction id of a specific transcation.
+   * @returns returns 0 if transaction is successfully voided else a negative numbers.
+   */
   public async cancelTransaction(txnId: string) {
     try {
       const response = await this.axios.get(`/void/${txnId}`);
