@@ -6,11 +6,14 @@ import { Transaction } from "@/types/transaction";
 import { ClientOptions } from "@/types/client-options";
 import { TransactionResponse } from "@/types/transcation-response";
 import { TransactioDetails } from "@/types/transaction-details";
+import { LifetimeDetails } from "@/types/lid-details";
 
 export class CollectionClient {
   private axios: AxiosInstance;
+  private prefix: string | undefined;
 
-  constructor({ apiKey, merchantId, version = "v1" }: ClientOptions) {
+  constructor({ apiKey, merchantId, version = "v1", prefix }: ClientOptions) {
+    this.prefix = prefix;
     this.axios = axiosClient.create({
       baseURL: `https://${process.env.NODE_ENV === "development" ? "test" : "gw"}.dragonpay.ph/api/collect/${version}`,
       headers: {
@@ -85,6 +88,19 @@ export class CollectionClient {
     try {
       const response = await this.axios.get(`/void/${txnId}`);
       return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) return error.message;
+    }
+  }
+
+  public async createLifetimeId(data: LifetimeDetails) {
+    if (!this.prefix) {
+      throw new Error("Lifetime ID prefix is required to create Lifetime IDs");
+    }
+
+    try {
+      const request = await this.axios.post(`/lifetime/create`, data);
+      return request.data;
     } catch (error) {
       if (error instanceof AxiosError) return error.message;
     }

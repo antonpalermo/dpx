@@ -56,6 +56,16 @@ describe("collection v1", () => {
 
     expect(txn).toMatchObject(expectedObj);
   });
+
+  test("throw an error if prefix is missing.", async () => {
+    await expect(
+      client1.createLifetimeId({
+        name: "Anton Palermo",
+        email: `${process.env.EMAIL}`,
+        remarks: "Create LID sample"
+      })
+    ).rejects.toThrow(Error);
+  });
 });
 
 describe("collection v2", () => {
