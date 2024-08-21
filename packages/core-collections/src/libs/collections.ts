@@ -99,7 +99,7 @@ export class CollectionClient {
     }
 
     try {
-      const request = await this.axios.post(`/lifetime/create`, data);
+      const request = await this.axios.post(`/lifetimeid/create`, data);
       return request.data;
     } catch (error) {
       if (error instanceof AxiosError) return error.message;

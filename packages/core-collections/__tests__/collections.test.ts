@@ -8,6 +8,12 @@ const client1 = new CollectionClient({
   merchantId: `${process.env.MERCHANT_ID}`
 });
 
+const lifetimeClient1 = new CollectionClient({
+  apiKey: `${process.env.MERCHANT_COLLECTION_API_KEY}`,
+  merchantId: `${process.env.MERCHANT_ID}`,
+  prefix: `${process.env.MERCHANT_PREFIX}`
+});
+
 const client2 = new CollectionClient({
   apiKey: `${process.env.MERCHANT_COLLECTION_API_KEY}`,
   merchantId: `${process.env.MERCHANT_ID}`,
@@ -65,6 +71,16 @@ describe("collection v1", () => {
         remarks: "Create LID sample"
       })
     ).rejects.toThrow(Error);
+  });
+
+  test("can client successfully create lifetime id", async () => {
+    const lid = await lifetimeClient1.createLifetimeId({
+      name: "Anton Palermo",
+      email: `${process.env.EMAIL}`,
+      remarks: "Create LID sample"
+    });
+
+    expect(lid).toBe(String);
   });
 });
 
