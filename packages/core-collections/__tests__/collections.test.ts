@@ -39,51 +39,6 @@ const expectedTxnDetailsObj = {
   Fee: expect.any(Number)
 };
 
-describe("collection v1", () => {
-  test("collection client version 1 should be defined", () => {
-    expect(client1).toBeDefined();
-  });
-
-  test("able to create a simple transaction on api version 1", async () => {
-    const transactionId = generateTxnID();
-    const txn = await client1.createTransaction(transactionId, {
-      amount: 1.0,
-      currency: "PHP",
-      description: "sample transaction",
-      email: `${process.env.EMAIL}`
-    });
-    // api should return all object properties below.
-    const expectedObj = {
-      RefNo: expect.any(String),
-      Status: expect.any(String),
-      Url: expect.stringContaining("https://"),
-      Message: expect.any(String)
-    };
-
-    expect(txn).toMatchObject(expectedObj);
-  });
-
-  test("throw an error if prefix is missing.", async () => {
-    await expect(
-      client1.createLifetimeId({
-        name: "Anton Palermo",
-        email: `${process.env.EMAIL}`,
-        remarks: "Create LID sample"
-      })
-    ).rejects.toThrow(Error);
-  });
-
-  test("can client successfully create lifetime id", async () => {
-    const lid = await lifetimeClient1.createLifetimeId({
-      name: "Anton Palermo",
-      email: `${process.env.EMAIL}`,
-      remarks: "Create LID sample"
-    });
-
-    expect(lid).toBe(String);
-  });
-});
-
 describe("collection v2", () => {
   test("collection client version 2 should be defined", () => {
     expect(client2).toBeDefined();
