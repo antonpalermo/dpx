@@ -1,6 +1,5 @@
 import axiosClient, { AxiosError, AxiosInstance } from "axios";
 
-import { endpoint } from "@/utils";
 import { toBase64 } from "@/utils";
 import { Transaction } from "@/types/transaction";
 import { ClientOptions } from "@/types/client-options";

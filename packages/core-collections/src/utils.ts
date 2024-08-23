@@ -1,5 +1,4 @@
 import { Buffer } from "node:buffer";
-import { v4 as uuid } from "uuid";
 
 export const errorCodes = {
   "000": "Success",
@@ -26,18 +25,6 @@ export const statusCodes = {
   U: "Unknown",
   V: "Void"
 };
-
-const urls = {
-  uat: "https://test.dragonpay.ph/api/collect",
-  prod: "https://gw.dragonpay.ph/api/collect"
-};
-
-export const endpoint =
-  process.env.NODE_ENV === "development" ? urls.uat : urls.prod;
-
-export function generateTxnID() {
-  return uuid().split("-").join("");
-}
 
 export function toBase64(value: string) {
   return Buffer.from(value).toString("base64");

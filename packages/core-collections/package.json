@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.cjs",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "dotenv -e ../../.env -- jest"
+    "test": "dotenv -e ../../.env -- jest",
+    "build": "tsup src/index.ts --format cjs,esm --dts --minify"
   },
   "dependencies": {
     "axios": "^1.7.3"
