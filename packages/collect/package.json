@@ -1,0 +1,16 @@
+{
+  "name": "collect",
+  "version": "1.0.0",
+  "description": "Dragonpay collection api wrapper",
+  "scripts": {},
+  "devDependencies": {
+    "@types/node": "^22.2.0"
+  },
+  "keywords": [
+    "dpx",
+    "dragonpay",
+    "payment gateway"
+  ],
+  "author": "Anton Palermo <hello@antonpalermo.com>",
+  "license": "MIT"
+}
