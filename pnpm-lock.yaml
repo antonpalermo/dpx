@@ -17,6 +17,12 @@ importers:
       '@types/node':
         specifier: ^22.2.0
         version: 22.2.0
+      tsup:
+        specifier: ^8.2.4
+        version: 8.2.4(typescript@5.5.4)
+      typescript:
+        specifier: ^5.5.4
+        version: 5.5.4
 
   packages/collections:
     dependencies:
