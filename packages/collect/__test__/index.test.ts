@@ -1,23 +1,29 @@
-import { customAlphabet } from "nanoid";
-
+import { randomUUID } from "node:crypto";
 import CollectClient from "@/index";
 
-const nanoid = customAlphabet("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", 30);
+const reusableUniqueID = randomUUID().split("-").join("").toUpperCase();
 
 describe("collection client version 1", () => {
   const client = CollectClient({
-    mid: ``,
-    secret: ``
+    mid: process.env.MERCHANT_ID!,
+    secret: process.env.MERCHANT_COLLECTION_API_KEY!
   });
 
   test("client able to create simple transaction", async () => {
-    const details = await client.collect(nanoid(), {
+    const expectedObj = {
+      RefNo: expect.any(String),
+      Status: expect.any(String),
+      Url: expect.stringContaining("https://"),
+      Message: expect.any(String)
+    };
+
+    const details = await client.collect(reusableUniqueID, {
       amount: 100.0,
       currency: "PHP",
       email: "anton.palermo@dragonpay.ph",
       description: "node package tests - anton palermo"
     });
 
-    expect(details).toMatchObject({});
+    expect(details).toMatchObject(expectedObj);
   });
 });
