@@ -1,5 +1,59 @@
 import toBase64Encode from "@/utils";
 
+export interface Transaction {
+  amount: number;
+  currency: "PHP" | "USD";
+  description: string;
+  email: string;
+  mobileNo?: string;
+  param1?: any;
+  param2?: any;
+  expiry?: Date;
+}
+
+export interface BillingInfo {
+  firstname: string;
+  lastname: string;
+  address1: string;
+  address2: string;
+  city: string;
+  state: string;
+  country: string;
+  zipCode: string;
+  telno: string;
+  email: string;
+}
+
+export interface ShippingInfo {
+  firstname: string;
+  middlename: string;
+  lastname: string;
+  address1: string;
+  address2: string;
+  barangay: string;
+  city: string;
+  province: string;
+  country: string;
+  zipCode: string;
+  landmark: string;
+  telno: string;
+  email: string;
+}
+
+export type TransactionDetails =
+  | (Transaction & {
+      procId?: "CC";
+      billingDetails?: BillingInfo;
+    })
+  | (Transaction & {
+      procId?: "LBCX";
+      senderShippingDetails?: ShippingInfo;
+      recipientShippingDetails?: ShippingInfo;
+    })
+  | (Transaction & {
+      procId?: string;
+    });
+
 export interface CollectionClientOptions {
   /**
    * Dragonpay assigned merchant id.
@@ -45,9 +99,10 @@ export default function CollectionClient({
     options?: RequestInit
   ): Promise<Response> => {
     return await fetch(endpoint, {
+      ...options,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `${toBase64Encode(`${mid}:${secret}`)}`,
+        Authorization: `Basic ${toBase64Encode(`${mid}:${secret}`)}`,
         ...options?.headers
       }
     });
@@ -58,7 +113,7 @@ export default function CollectionClient({
    * @param txnid unique transaction id that represent the whole transaction.
    * @param data data that dragonpay will process
    */
-  async function collect(txnid: string, data: {}) {
+  async function collect(txnid: string, data: TransactionDetails) {
     try {
       const req = await request(`${endpoint}/${txnid}/post`, {
         method: "POST",
