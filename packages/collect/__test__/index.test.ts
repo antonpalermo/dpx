@@ -65,7 +65,7 @@ describe("collection client version 1", () => {
       procId: "BOGX"
     });
 
-    sleep(3000);
+    await sleep(200);
 
     const details = await client.getTransactionByRefno(transaction.RefNo);
 
@@ -83,7 +83,7 @@ describe("collection client version 1", () => {
       procId: "BOGX"
     });
 
-    sleep(1500);
+    await sleep(200);
 
     const details = await client.getTransactionByTxnid(txnid);
 
@@ -119,7 +119,7 @@ describe("collection client version 2", () => {
       procId: "BOGX"
     });
 
-    sleep(3000);
+    await sleep(200);
 
     const details = await client2.getTransactionByRefno(transaction.RefNo);
 
@@ -137,7 +137,7 @@ describe("collection client version 2", () => {
       procId: "BOGX"
     });
 
-    sleep(1500);
+    await sleep(200);
 
     const details = await client2.getTransactionByTxnid(txnid);
 
