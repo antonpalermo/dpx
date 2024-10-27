@@ -5,6 +5,6 @@ import { Buffer } from "node:buffer";
  * @param value value to be converted to base64 string
  * @returns base64 encoded string
  */
-export default function toBase64Encode(value: string) {
+export function toBase64Encode(value: string) {
   return Buffer.from(value).toString("base64");
 }

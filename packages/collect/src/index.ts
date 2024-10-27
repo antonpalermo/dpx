@@ -1,4 +1,4 @@
-import toBase64Encode from "@/utils";
+import { toBase64Encode } from "@/utils";
 
 export interface Transaction {
   amount: number;
