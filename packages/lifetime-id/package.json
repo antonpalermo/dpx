@@ -1,5 +1,5 @@
 {
-  "name": "@dpx/lid",
+  "name": "@dragonpay/lid",
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -8,7 +8,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "dotenv -e ../../.env -- jest",
-    "build": "tsup src/index.ts --format cjs,esm --dts --minify"
+    "build": "tsup"
   },
   "dependencies": {
     "axios": "^1.7.3"
