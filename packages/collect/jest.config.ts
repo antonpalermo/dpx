@@ -7,7 +7,6 @@ const config = {
   moduleNameMapper: {
     "@/(.*)": "<rootDir>/src/$1"
   },
-  openHandlesTimeout: 0
 };
 
 export default config;

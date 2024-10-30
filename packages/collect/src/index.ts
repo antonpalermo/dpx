@@ -89,38 +89,22 @@ export default function CollectionClient({
   const endpoint = `https://${env}.dragonpay.ph/api/collect/${version}`;
 
   /**
-   * wraps the native fetch.
-   * @param endpoint endpoint to send the request to.
-   * @param options request options
-   * @returns fetch response.
-   */
-  const request = async (
-    endpoint: RequestInfo | URL,
-    options?: RequestInit
-  ): Promise<Response> => {
-    return await fetch(endpoint, {
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Basic ${toBase64Encode(`${mid}:${secret}`)}`,
-        ...options?.headers
-      }
-    });
-  };
-
-  /**
    * create a new collection transaction.
    * @param txnid unique transaction id that represent the whole transaction.
    * @param data data that dragonpay will process
    */
   async function collect(txnid: string, data: TransactionDetails) {
     try {
-      const req = await request(`${endpoint}/${txnid}/post`, {
+      const request = await fetch(`${endpoint}/${txnid}/post`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${toBase64Encode(`${mid}:${secret}`)}`
+        },
         body: JSON.stringify(data)
       });
 
-      return await req.json();
+      return await request.json();
     } catch (error) {
       console.log("collect: unable to process request");
       throw error;
@@ -133,10 +117,14 @@ export default function CollectionClient({
    */
   async function getTransactionByRefno(refno: string) {
     try {
-      const req = await request(`${endpoint}/refno/${refno}`, {
-        method: "GET"
+      const request = await fetch(`${endpoint}/refno/${refno}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${toBase64Encode(`${mid}:${secret}`)}`
+        }
       });
-      return await req.json();
+
+      return await request.json();
     } catch (error) {
       console.log("getTransactionByRefno: unable to process request");
       throw error;
@@ -149,10 +137,14 @@ export default function CollectionClient({
    */
   async function getTransactionByTxnid(txnid: string) {
     try {
-      const req = await request(`${endpoint}/txnid/${txnid}`, {
-        method: "GET"
+      const request = await fetch(`${endpoint}/txnid/${txnid}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${toBase64Encode(`${mid}:${secret}`)}`
+        }
       });
-      return await req.json();
+
+      return await request.json();
     } catch (error) {
       console.log("getTransactionByTxnid: unable to process request");
       throw error;
@@ -165,8 +157,55 @@ export default function CollectionClient({
    */
   async function cancelTransaction(txnid: string) {
     try {
-      const req = await request(`${endpoint}/void/${txnid}`, { method: "GET" });
-      return await req.json();
+      const request = await fetch(`${endpoint}/void/${txnid}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${toBase64Encode(`${mid}:${secret}`)}`
+        }
+      });
+      return await request.json();
+    } catch (error) {
+      console.log("cancelTransaction: unable to process request");
+      throw error;
+    }
+  }
+
+  async function getTransactions(from: Date, to: Date) {
+    const parseDate = (date: Date) =>
+      `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+
+    try {
+      const request = await fetch(
+        `${endpoint}/transactions?startdate=${parseDate(from)}&enddate=${parseDate(to)}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Basic ${toBase64Encode(`${mid}:${secret}`)}`
+          }
+        }
+      );
+      return await request.json();
+    } catch (error) {
+      console.log("cancelTransaction: unable to process request");
+      throw error;
+    }
+  }
+
+  async function getSettledTransactions(from: Date, to: Date) {
+    const parseDate = (date: Date) =>
+      `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+
+    try {
+      const request = await fetch(
+        `${endpoint}/settled?startdate=${parseDate(from)}&enddate=${parseDate(to)}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Basic ${toBase64Encode(`${mid}:${secret}`)}`
+          }
+        }
+      );
+      return await request.json();
     } catch (error) {
       console.log("cancelTransaction: unable to process request");
       throw error;
@@ -177,6 +216,8 @@ export default function CollectionClient({
     collect,
     cancelTransaction,
     getTransactionByRefno,
-    getTransactionByTxnid
+    getTransactionByTxnid,
+    getTransactions,
+    getSettledTransactions
   };
 }

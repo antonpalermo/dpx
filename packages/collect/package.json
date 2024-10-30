@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "tsup",
-    "test": "dotenv -e ../../.env -- jest --forceExit"
+    "test": "dotenv -e ../../.env -- jest"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
