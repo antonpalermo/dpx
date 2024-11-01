@@ -8,3 +8,8 @@ import { Buffer } from "node:buffer";
 export function toBase64Encode(value: string) {
   return Buffer.from(value).toString("base64");
 }
+
+export const ERRORS = {
+  SERVER: "Unable to process your request right now.",
+  UNAUTHORIZED: "Unauthorized request, please check your credentials"
+};
