@@ -1,10 +1,5 @@
 import fetch from "jest-fetch-mock";
-import { randomUUID } from "node:crypto";
 import CollectClient from "@/index";
-
-const reusableUniqueID = randomUUID().split("-").join("").toUpperCase();
-const sleep = (ms: number): Promise<void> =>
-  new Promise(res => setTimeout(res, ms));
 
 const client = CollectClient({
   mid: process.env.MERCHANT_ID!,
@@ -18,25 +13,6 @@ const client2 = CollectClient({
     version: "v2"
   }
 });
-
-const expectedTransactionDetails = {
-  RefNo: expect.any(String),
-  MerchantId: expect.any(String),
-  TxnId: expect.any(String),
-  RefDate: expect.any(String),
-  Amount: expect.any(Number),
-  Currency: expect.any(String),
-  Description: expect.any(String),
-  Status: expect.any(String),
-  Email: expect.any(String),
-  MobileNo: expect.any(String),
-  ProcId: expect.any(String),
-  ProcMsg: expect.any(String),
-  SettleDate: expect.any(String),
-  Param1: expect.any(String),
-  Param2: expect.any(String),
-  Fee: expect.any(Number)
-};
 
 beforeEach(() => {
   fetch.resetMocks();
@@ -52,7 +28,7 @@ describe("collection client version 1", () => {
     };
     fetch.mockResponseOnce(JSON.stringify(response));
 
-    const details = await client.collect(reusableUniqueID, {
+    const details = await client.collect("SAMPLETXN", {
       amount: 100.0,
       currency: "PHP",
       email: process.env.EMAIL!,
@@ -131,7 +107,7 @@ describe("collection client version 2", () => {
 
     fetch.mockResponseOnce(JSON.stringify(response));
 
-    const transaction = await client2.collect(reusableUniqueID, {
+    const transaction = await client2.collect("SAMPLETXN", {
       amount: 100.0,
       currency: "PHP",
       email: process.env.EMAIL!,
