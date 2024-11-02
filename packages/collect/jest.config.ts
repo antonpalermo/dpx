@@ -6,7 +6,8 @@ const config = {
   },
   moduleNameMapper: {
     "@/(.*)": "<rootDir>/src/$1"
-  }
+  },
+  setupFiles: ["<rootDir>/setupTests.js"]
 };
 
 export default config;

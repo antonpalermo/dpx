@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "tsup",
-    "test": "dotenv -e ../../.env -- jest --forceExit"
+    "test": "dotenv -e ../../.env -- jest"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -15,6 +15,7 @@
     "@types/node": "^22.2.0",
     "dotenv-cli": "^7.4.2",
     "jest": "^29.7.0",
+    "jest-fetch-mock": "^3.0.3",
     "nanoid": "^5.0.7",
     "ts-jest": "^29.2.4",
     "typescript": "^5.5.4"
