@@ -1,3 +1,4 @@
+import fetch from "jest-fetch-mock";
 import { randomUUID } from "node:crypto";
 import CollectClient from "@/index";
 
@@ -37,14 +38,19 @@ const expectedTransactionDetails = {
   Fee: expect.any(Number)
 };
 
+beforeEach(() => {
+  fetch.resetMocks();
+});
+
 describe("collection client version 1", () => {
   test("client able to create simple transaction", async () => {
-    const expectedObj = {
-      RefNo: expect.any(String),
-      Status: expect.any(String),
-      Url: expect.stringContaining("https://"),
-      Message: expect.any(String)
+    const response = {
+      Refno: "MOCKREF",
+      Status: "S",
+      Url: "https://test.dragonpay.ph",
+      Message: "Successful"
     };
+    fetch.mockResponseOnce(JSON.stringify(response));
 
     const details = await client.collect(reusableUniqueID, {
       amount: 100.0,
@@ -53,52 +59,77 @@ describe("collection client version 1", () => {
       description: "node package tests - anton palermo"
     });
 
-    expect(details).toMatchObject(expectedObj);
+    expect(details).toEqual(response);
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
 
   test("client able to retrieve transaction details using refno", async () => {
-    const transaction = await client2.collect(reusableUniqueID, {
-      amount: 100.0,
-      currency: "PHP",
-      email: process.env.EMAIL!,
-      description: "node package tests - anton palermo",
-      procId: "BOGX"
-    });
+    const response = {
+      RefNo: "SAMPLEREF",
+      MerchantId: `${process.env.MERCHANT_ID}`,
+      TxnId: "SAMPLETXN",
+      RefDate: "10/29/2024 9:19:24 PM",
+      Amount: 100.0,
+      Currency: "PHP",
+      Description: "node package tests - anton palermo",
+      Status: "U",
+      Email: `${process.env.EMAIL}`,
+      MobileNo: "",
+      ProcId: "BOGX",
+      ProcMsg: "",
+      SettleDate: "",
+      Param1: "",
+      Param2: "",
+      Fee: 0
+    };
 
-    await sleep(200);
+    fetch.mockResponseOnce(JSON.stringify(response));
 
-    const details = await client.getTransactionByRefno(transaction.RefNo);
+    const details = await client.getTransactionByRefno("SAMPLEREF");
 
-    expect(details).toMatchObject(expectedTransactionDetails);
+    expect(details).toMatchObject(response);
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
 
   test("client able to retrieve transaction details using txnid", async () => {
-    const txnid = reusableUniqueID;
+    const response = {
+      RefNo: "SAMPLEREF",
+      MerchantId: `${process.env.MERCHANT_ID}`,
+      TxnId: "SAMPLETXN",
+      RefDate: "10/29/2024 9:19:24 PM",
+      Amount: 100.0,
+      Currency: "PHP",
+      Description: "node package tests - anton palermo",
+      Status: "U",
+      Email: `${process.env.EMAIL}`,
+      MobileNo: "",
+      ProcId: "BOGX",
+      ProcMsg: "",
+      SettleDate: "",
+      Param1: "",
+      Param2: "",
+      Fee: 0
+    };
 
-    await client2.collect(txnid, {
-      amount: 100.0,
-      currency: "PHP",
-      email: process.env.EMAIL!,
-      description: "node package tests - anton palermo",
-      procId: "BOGX"
-    });
+    fetch.mockResponseOnce(JSON.stringify(response));
 
-    await sleep(200);
+    const details = await client.getTransactionByTxnid("SAMPLETXN");
 
-    const details = await client.getTransactionByTxnid(txnid);
-
-    expect(details).toMatchObject(expectedTransactionDetails);
+    expect(details).toMatchObject(response);
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
 });
 
 describe("collection client version 2", () => {
   test("client able to create sample transaction", async () => {
-    const expectedObj = {
-      RefNo: expect.any(String),
-      Status: expect.any(String),
-      Url: expect.stringContaining("https://test-ui.dragonpay.ph"),
-      Message: expect.any(String)
+    const response = {
+      RefNo: "SAMPLEREF",
+      Status: "S",
+      Url: "https://test-ui.dragonpay.ph",
+      Message: "Successful"
     };
+
+    fetch.mockResponseOnce(JSON.stringify(response));
 
     const transaction = await client2.collect(reusableUniqueID, {
       amount: 100.0,
@@ -107,40 +138,63 @@ describe("collection client version 2", () => {
       description: "node package tests - anton palermo"
     });
 
-    expect(transaction).toMatchObject(expectedObj);
+    expect(transaction).toMatchObject(response);
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
 
   test("client able to retrieve transaction details using refno", async () => {
-    const transaction = await client2.collect(reusableUniqueID, {
-      amount: 100.0,
-      currency: "PHP",
-      email: process.env.EMAIL!,
-      description: "node package tests - anton palermo",
-      procId: "BOGX"
-    });
+    const response = {
+      RefNo: "SAMPLEREF",
+      MerchantId: `${process.env.MERCHANT_ID}`,
+      TxnId: "SAMPLETXN",
+      RefDate: "10/29/2024 9:19:24 PM",
+      Amount: 100.0,
+      Currency: "PHP",
+      Description: "node package tests - anton palermo",
+      Status: "U",
+      Email: `${process.env.EMAIL}`,
+      MobileNo: "",
+      ProcId: "BOGX",
+      ProcMsg: "",
+      SettleDate: "",
+      Param1: "",
+      Param2: "",
+      Fee: 0
+    };
 
-    await sleep(200);
+    fetch.mockResponseOnce(JSON.stringify(response));
 
-    const details = await client2.getTransactionByRefno(transaction.RefNo);
+    const details = await client2.getTransactionByRefno("SAMPLEREF");
 
-    expect(details).toMatchObject(expectedTransactionDetails);
+    expect(details).toMatchObject(response);
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
 
   test("client able to retrieve transaction details using txnid", async () => {
-    const txnid = reusableUniqueID;
+    const response = {
+      RefNo: "SAMPLEREF",
+      MerchantId: `${process.env.MERCHANT_ID}`,
+      TxnId: "SAMPLETXN",
+      RefDate: "10/29/2024 9:19:24 PM",
+      Amount: 100.0,
+      Currency: "PHP",
+      Description: "node package tests - anton palermo",
+      Status: "U",
+      Email: `${process.env.EMAIL}`,
+      MobileNo: "",
+      ProcId: "BOGX",
+      ProcMsg: "",
+      SettleDate: "",
+      Param1: "",
+      Param2: "",
+      Fee: 0
+    };
 
-    await client2.collect(txnid, {
-      amount: 100.0,
-      currency: "PHP",
-      email: process.env.EMAIL!,
-      description: "node package tests - anton palermo",
-      procId: "BOGX"
-    });
+    fetch.mockResponseOnce(JSON.stringify(response));
 
-    await sleep(200);
+    const details = await client2.getTransactionByTxnid("SAMPLETXN");
 
-    const details = await client2.getTransactionByTxnid(txnid);
-
-    expect(details).toMatchObject(expectedTransactionDetails);
+    expect(details).toMatchObject(response);
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
 });
