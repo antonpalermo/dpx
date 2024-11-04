@@ -1,11 +1,9 @@
 import { Buffer } from "node:buffer";
 
 export interface LifetimeDetails {
-  prefix: string;
   name: string;
   email: string;
   remarks: string;
-  preferredId?: string;
 }
 
 export interface LifetimeClientOptions {
@@ -48,15 +46,18 @@ export default function LifetimeClient({
   const version = options?.version;
   const endpoint = `https://${env}.dragonpay.ph/api/collect/${version}`;
 
+  const toBase64Encode = (value: string) =>
+    Buffer.from(value).toString("base64");
+
   async function create(details: LifetimeDetails) {
     try {
       const request = await fetch(`${endpoint}/lifetimeid/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Basic ${Buffer.from(`${mid}:${secret}`).toString("base64")}`
+          Authorization: `Basic ${toBase64Encode(`${mid}:${secret}`)}`
         },
-        body: JSON.stringify(details)
+        body: JSON.stringify({ prefix, ...details })
       });
 
       const response = await request.json();
@@ -71,7 +72,7 @@ export default function LifetimeClient({
       const request = await fetch(`${endpoint}/lifetimeid/${lid}`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Basic ${Buffer.from(`${mid}:${secret}`).toString("base64")}`
+          Authorization: `Basic ${toBase64Encode(`${mid}:${secret}`)}`
         }
       });
 
@@ -87,7 +88,7 @@ export default function LifetimeClient({
       const request = await fetch(`${endpoint}/lifetimeid/activate/${lid}`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Basic ${Buffer.from(`${mid}:${secret}`).toString("base64")}`
+          Authorization: `Basic ${toBase64Encode(`${mid}:${secret}`)}`
         }
       });
 
@@ -103,14 +104,14 @@ export default function LifetimeClient({
       const request = await fetch(`${endpoint}/lifetimeid/deactivate/${lid}`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Basic ${Buffer.from(`${mid}:${secret}`).toString("base64")}`
+          Authorization: `Basic ${toBase64Encode(`${mid}:${secret}`)}`
         }
       });
 
       const response = await request.json();
       return response;
     } catch (error) {
-      console.log("activate: unable to process lid action");
+      console.log("deactivate: unable to process lid action");
     }
   }
 
@@ -123,7 +124,7 @@ export default function LifetimeClient({
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Basic ${Buffer.from(`${mid}:${secret}`).toString("base64")}`
+          Authorization: `Basic ${toBase64Encode(`${mid}:${secret}`)}`
         },
         body: JSON.stringify(details)
       });
@@ -143,7 +144,7 @@ export default function LifetimeClient({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Basic ${Buffer.from(`${mid}:${secret}`).toString("base64")}`
+            Authorization: `Basic ${toBase64Encode(`${mid}:${secret}`)}`
           }
         }
       );

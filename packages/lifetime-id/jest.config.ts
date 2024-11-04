@@ -7,7 +7,7 @@ const config = {
   moduleNameMapper: {
     "@/(.*)": "<rootDir>/src/$1"
   },
-  openHandlesTimeout: 0
+  setupFiles: ["<rootDir>/setupTests.js"]
 };
 
 export default config;
