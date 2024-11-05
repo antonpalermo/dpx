@@ -59,4 +59,14 @@ describe("lifetime client version 1", () => {
     // TODO: assert response.
     expect(fetch).toHaveBeenCalledTimes(1);
   });
+
+  test("client able to update details", async () => {
+    fetch.mockResponseOnce("Success", { status: 200 });
+    const updatedLID = await client.updateDetails("ZZ000527", {
+      email: process.env.EMAIL,
+      name: "Updated name"
+    });
+    // TODO: assert response.
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
 });
