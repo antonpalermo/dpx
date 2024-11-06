@@ -1,5 +1,6 @@
 import LifetimeClient from "@/index";
 import fetch from "jest-fetch-mock";
+import { executionAsyncId } from "node:async_hooks";
 
 const client = LifetimeClient({
   mid: `${process.env.MERCHANT_ID}`,
@@ -47,7 +48,7 @@ describe("lifetime client version 1", () => {
 
     const result = await client.activate("ZZ000527");
 
-    // TODO: assert response.
+    expect(result?.success).toBe(true);
     expect(fetch).toHaveBeenCalledTimes(1);
   });
 
@@ -56,17 +57,18 @@ describe("lifetime client version 1", () => {
 
     const result = await client.deactivate("ZZ000527");
 
-    // TODO: assert response.
+    expect(result?.success).toBe(true);
     expect(fetch).toHaveBeenCalledTimes(1);
   });
 
   test("client able to update details", async () => {
     fetch.mockResponseOnce("Success", { status: 200 });
-    const updatedLID = await client.updateDetails("ZZ000527", {
+    const result = await client.updateDetails("ZZ000527", {
       email: process.env.EMAIL,
       name: "Updated name"
     });
-    // TODO: assert response.
+
+    expect(result?.success).toBe(true);
     expect(fetch).toHaveBeenCalledTimes(1);
   });
 });

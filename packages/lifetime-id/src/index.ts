@@ -92,8 +92,17 @@ export default function LifetimeClient({
         }
       });
 
-      const response = await request.json();
-      return response;
+      if (!request.ok) {
+        return {
+          success: false,
+          message: "Lifetime ID not found or already active"
+        };
+      }
+
+      return {
+        success: true,
+        message: "Lifetime ID reactivated successful"
+      };
     } catch (error) {
       console.log("activate: unable to process lid action");
     }
@@ -108,8 +117,17 @@ export default function LifetimeClient({
         }
       });
 
-      const response = await request.json();
-      return response;
+      if (!request.ok) {
+        return {
+          success: false,
+          message: "Lifetime ID not found or already deactivated"
+        };
+      }
+
+      return {
+        success: true,
+        message: "Lifetime ID deactivated successful"
+      };
     } catch (error) {
       console.log("deactivate: unable to process lid action");
     }
@@ -129,8 +147,17 @@ export default function LifetimeClient({
         body: JSON.stringify(details)
       });
 
-      const response = await request.json();
-      return response;
+      if (!request.ok) {
+        return {
+          success: false,
+          message: "Unable to update the requested lifetime id"
+        };
+      }
+
+      return {
+        success: true,
+        message: "Lifetime ID details updated successful"
+      };
     } catch (error) {
       console.log("create: unable to create lid");
     }
