@@ -4,7 +4,7 @@ import fetch from "jest-fetch-mock";
 const client = LifetimeClient({
   mid: `${process.env.MERCHANT_ID}`,
   secret: `${process.env.MERCHANT_COLLECTION_API_KEY}`,
-  prefix: `${process.env.MERCHANT_PREFIX}`
+  bin: `${process.env.MERCHANT_BIN}`
 });
 
 beforeEach(() => {
@@ -17,7 +17,8 @@ describe("lifetime client version 1", () => {
     const lid = await client.create({
       email: `${process.env.EMAIL}`,
       name: "Anton Palermo",
-      remarks: "lid package tests create sample lid"
+      remarks: "lid package tests create sample lid",
+      preferredId: '1234567890'
     });
     expect(lid).toBe("ZZ000527");
     expect(fetch).toHaveBeenCalledTimes(1);
