@@ -1,13 +1,13 @@
 import { Buffer } from "node:buffer";
 
-export interface LifetimeDetails {
+export interface MUVADetails {
   name: string;
   email: string;
   remarks: string;
   preferredId: string;
 }
 
-export interface LifetimeClientOptions {
+export interface MUVAClientOptions {
   /**
    * Dragonpay assigned merchant id.
    */
@@ -36,12 +36,12 @@ export interface LifetimeClientOptions {
   };
 }
 
-export default function LifetimeClient({
+export default function MUVAClient({
   mid,
   secret,
   bin,
   options
-}: LifetimeClientOptions) {
+}: MUVAClientOptions) {
   const env = process.env.NODE_ENV === "development" ? "test" : "gw";
 
   const version = options?.version;
@@ -50,7 +50,7 @@ export default function LifetimeClient({
   const toBase64Encode = (value: string) =>
     Buffer.from(value).toString("base64");
 
-  async function create(details: LifetimeDetails) {
+  async function create(details: MUVADetails) {
     try {
       const request = await fetch(`${endpoint}/lifetimeid/create`, {
         method: "POST",
@@ -96,13 +96,13 @@ export default function LifetimeClient({
       if (!request.ok) {
         return {
           success: false,
-          message: "Lifetime ID not found or already active"
+          message: "MUVA not found or already active"
         };
       }
 
       return {
         success: true,
-        message: "Lifetime ID reactivated successful"
+        message: "MUVA reactivated successful"
       };
     } catch (error) {
       console.log("activate: unable to process lid action");
@@ -121,13 +121,13 @@ export default function LifetimeClient({
       if (!request.ok) {
         return {
           success: false,
-          message: "Lifetime ID not found or already deactivated"
+          message: "MUVA not found or already deactivated"
         };
       }
 
       return {
         success: true,
-        message: "Lifetime ID deactivated successful"
+        message: "MUVA deactivated successful"
       };
     } catch (error) {
       console.log("deactivate: unable to process lid action");
@@ -136,7 +136,7 @@ export default function LifetimeClient({
 
   async function updateDetails(
     lid: string,
-    details: Partial<Omit<LifetimeDetails, "prefix">>
+    details: Partial<Omit<MUVADetails, "prefix">>
   ) {
     try {
       const request = await fetch(`${endpoint}/lifetimeid/${lid}`, {
@@ -157,7 +157,7 @@ export default function LifetimeClient({
 
       return {
         success: true,
-        message: "Lifetime ID details updated successful"
+        message: "MUVA details updated successful"
       };
     } catch (error) {
       console.log("create: unable to create lid");
