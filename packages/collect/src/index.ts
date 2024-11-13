@@ -40,6 +40,11 @@ export interface ShippingInfo {
   email: string;
 }
 
+export interface Response {
+  success: boolean;
+  data: { [key: string]: any } | undefined;
+}
+
 export type TransactionDetails =
   | (Transaction & {
       procId?: "CC";
@@ -53,6 +58,23 @@ export type TransactionDetails =
   | (Transaction & {
       procId?: string;
     });
+
+class ErrorResponse extends Error {
+  constructor(
+    message: string,
+    public data: any
+  ) {
+    super(message);
+    this.data = data;
+  }
+
+  toJSON() {
+    return JSON.stringify({
+      message: this.message,
+      data: this.data
+    });
+  }
+}
 
 export interface CollectionClientOptions {
   /**
@@ -93,7 +115,10 @@ export default function CollectionClient({
    * @param txnid unique transaction id that represent the whole transaction.
    * @param data data that dragonpay will process
    */
-  async function collect(txnid: string, data: TransactionDetails) {
+  async function collect(
+    txnid: string,
+    data: TransactionDetails
+  ): Promise<Response> {
     try {
       const request = await fetch(`${endpoint}/${txnid}/post`, {
         method: "POST",
@@ -104,10 +129,29 @@ export default function CollectionClient({
         body: JSON.stringify(data)
       });
 
-      return await request.json();
+      const payload = await request.json();
+
+      if (version === "v2") {
+        return {
+          success: true,
+          data: payload
+        };
+      }
+
+      return {
+        success: true,
+        data: {
+          refno: payload.RefNo,
+          status: payload.Status,
+          message: payload.Message,
+          url: payload.Url
+        }
+      };
     } catch (error) {
-      console.log("collect: unable to process request");
-      throw error;
+      throw new ErrorResponse("Unable to acquire payment link", {
+        success: false,
+        data: undefined
+      });
     }
   }
 

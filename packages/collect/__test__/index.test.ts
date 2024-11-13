@@ -39,6 +39,26 @@ describe("collection client version 1", () => {
     expect(fetch).toHaveBeenCalledTimes(1);
   });
 
+  test("handle create transaction error", async () => {
+    fetch.mockRejectOnce(
+      new Error(
+        JSON.stringify({ status: 500, statusText: "Internal Server Error" })
+      )
+    );
+
+    const details = await client.collect("SAMPLETXN", {
+      amount: 100.0,
+      currency: "PHP",
+      email: process.env.EMAIL!,
+      description: "node package tests - anton palermo"
+    });
+
+    expect(details).toThrow(
+      JSON.stringify({ status: 500, statusText: "Internal Server Error" })
+    );
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
   test("client able to retrieve transaction details using refno", async () => {
     const response = {
       RefNo: "SAMPLEREF",
