@@ -1,5 +1,5 @@
 import fetch from "jest-fetch-mock";
-import CollectClient from "@/index";
+import CollectClient, { ErrorResponse } from "@/index";
 
 const client = CollectClient({
   mid: process.env.MERCHANT_ID!,
@@ -21,11 +21,12 @@ beforeEach(() => {
 describe("collection client version 1", () => {
   test("client able to create simple transaction", async () => {
     const response = {
-      Refno: "MOCKREF",
+      RefNo: "MOCKREF",
       Status: "S",
       Url: "https://test.dragonpay.ph",
       Message: "Successful"
     };
+
     fetch.mockResponseOnce(JSON.stringify(response));
 
     const details = await client.collect("SAMPLETXN", {
@@ -35,27 +36,42 @@ describe("collection client version 1", () => {
       description: "node package tests - anton palermo"
     });
 
-    expect(details).toEqual(response);
+    expect(details).toEqual({
+      success: true,
+      data: {
+        refno: "MOCKREF",
+        status: "S",
+        message: "Successful",
+        url: "https://test.dragonpay.ph"
+      }
+    });
     expect(fetch).toHaveBeenCalledTimes(1);
   });
 
   test("handle create transaction error", async () => {
     fetch.mockRejectOnce(
-      new Error(
-        JSON.stringify({ status: 500, statusText: "Internal Server Error" })
-      )
+      new ErrorResponse("Unable to acquire payment link", {
+        success: false,
+        data: undefined
+      })
     );
 
-    const details = await client.collect("SAMPLETXN", {
-      amount: 100.0,
-      currency: "PHP",
-      email: process.env.EMAIL!,
-      description: "node package tests - anton palermo"
-    });
+    try {
+      await client.collect("SAMPLETXN", {
+        amount: 100.0,
+        currency: "PHP",
+        email: process.env.EMAIL!,
+        description: "node package tests - anton palermo"
+      });
+    } catch (error) {
+      expect(error).toBeInstanceOf(ErrorResponse);
+      if (error instanceof ErrorResponse) {
+        expect(error.message).toBe("Unable to acquire payment link");
+        expect(error.data.success).toBe(false);
+        expect(error.data.data).toBeUndefined();
+      }
+    }
 
-    expect(details).toThrow(
-      JSON.stringify({ status: 500, statusText: "Internal Server Error" })
-    );
     expect(fetch).toHaveBeenCalledTimes(1);
   });
 
@@ -134,7 +150,17 @@ describe("collection client version 2", () => {
       description: "node package tests - anton palermo"
     });
 
-    expect(transaction).toMatchObject(response);
+    console.log(transaction)
+
+    expect(transaction).toMatchObject({
+      success: true,
+      data: {
+        refno: "SAMPLEREF",
+        status: "S",
+        url: "https://test-ui.dragonpay.ph",
+        message: "Successful"
+      }
+    });
     expect(fetch).toHaveBeenCalledTimes(1);
   });
 

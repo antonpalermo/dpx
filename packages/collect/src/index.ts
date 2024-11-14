@@ -59,7 +59,7 @@ export type TransactionDetails =
       procId?: string;
     });
 
-class ErrorResponse extends Error {
+export class ErrorResponse extends Error {
   constructor(
     message: string,
     public data: any
@@ -130,13 +130,6 @@ export default function CollectionClient({
       });
 
       const payload = await request.json();
-
-      if (version === "v2") {
-        return {
-          success: true,
-          data: payload
-        };
-      }
 
       return {
         success: true,
