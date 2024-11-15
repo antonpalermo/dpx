@@ -152,7 +152,9 @@ export default function CollectionClient({
    * get transaction details using the provided refno
    * @param refno unique reference number assigned to a transaction.
    */
-  async function getTransactionByRefno(refno: string) {
+  async function getTransactionByRefno(
+    refno: string
+  ): Promise<Response | ErrorResponse> {
     try {
       const request = await fetch(`${endpoint}/refno/${refno}`, {
         headers: {
@@ -161,10 +163,15 @@ export default function CollectionClient({
         }
       });
 
-      return await request.json();
+      return {
+        success: true,
+        data: await request.json()
+      };
     } catch (error) {
-      console.log("getTransactionByRefno: unable to process request");
-      throw error;
+      throw new ErrorResponse(`Unable to locate transaction ${refno}`, {
+        success: false,
+        data: undefined
+      });
     }
   }
 
