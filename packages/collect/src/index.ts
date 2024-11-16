@@ -179,7 +179,9 @@ export default function CollectionClient({
    * get transaction details using the provided txnid
    * @param txnid unique transaction id assigned to a transaction.
    */
-  async function getTransactionByTxnid(txnid: string) {
+  async function getTransactionByTxnid(
+    txnid: string
+  ): Promise<Response | ErrorResponse> {
     try {
       const request = await fetch(`${endpoint}/txnid/${txnid}`, {
         headers: {
@@ -188,10 +190,15 @@ export default function CollectionClient({
         }
       });
 
-      return await request.json();
+      return {
+        success: true,
+        data: await request.json()
+      };
     } catch (error) {
-      console.log("getTransactionByTxnid: unable to process request");
-      throw error;
+      throw new ErrorResponse(`Unable to locate transaction ${txnid}`, {
+        success: false,
+        data: undefined
+      });
     }
   }
 
