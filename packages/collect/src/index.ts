@@ -263,12 +263,35 @@ export default function CollectionClient({
     }
   }
 
+  async function getAvailableProcessors(
+    amount?: number
+  ): Promise<Response | ErrorResponse> {
+    try {
+      const request = await fetch(
+        amount
+          ? `${endpoint}/processors/available/${amount}`
+          : `${endpoint}/processors`
+      );
+
+      return {
+        success: true,
+        data: await request.json()
+      };
+    } catch (error) {
+      throw new ErrorResponse("unable to get all available processors", {
+        success: false,
+        data: undefined
+      });
+    }
+  }
+
   return {
     collect,
     cancelTransaction,
     getTransactionByRefno,
     getTransactionByTxnid,
     getTransactions,
-    getSettledTransactions
+    getSettledTransactions,
+    getAvailableProcessors
   };
 }
