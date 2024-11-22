@@ -206,7 +206,9 @@ export default function CollectionClient({
    * void transaction based on the provided txnid.
    * @param txnid unique transaction id assigned to a transaction.
    */
-  async function cancelTransaction(txnid: string) {
+  async function cancelTransaction(
+    txnid: string
+  ): Promise<Response | ErrorResponse> {
     try {
       const request = await fetch(`${endpoint}/void/${txnid}`, {
         headers: {
@@ -214,14 +216,23 @@ export default function CollectionClient({
           Authorization: `Basic ${toBase64Encode(`${mid}:${secret}`)}`
         }
       });
-      return await request.json();
+
+      return {
+        success: true,
+        data: await request.json()
+      };
     } catch (error) {
-      console.log("cancelTransaction: unable to process request");
-      throw error;
+      throw new ErrorResponse("unable to cancel requested transaction", {
+        success: false,
+        data: undefined
+      });
     }
   }
 
-  async function getTransactions(from: Date, to: Date) {
+  async function getTransactions(
+    from: Date,
+    to: Date
+  ): Promise<Response | ErrorResponse> {
     const parseDate = (date: Date) =>
       `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 
@@ -235,14 +246,22 @@ export default function CollectionClient({
           }
         }
       );
-      return await request.json();
+      return {
+        success: true,
+        data: await request.json()
+      };
     } catch (error) {
-      console.log("cancelTransaction: unable to process request");
-      throw error;
+      throw new ErrorResponse("unable to fetch all requested transactions", {
+        success: false,
+        data: undefined
+      });
     }
   }
 
-  async function getSettledTransactions(from: Date, to: Date) {
+  async function getSettledTransactions(
+    from: Date,
+    to: Date
+  ): Promise<Response | ErrorResponse> {
     const parseDate = (date: Date) =>
       `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 
@@ -256,10 +275,15 @@ export default function CollectionClient({
           }
         }
       );
-      return await request.json();
+      return {
+        success: true,
+        data: await request.json()
+      };
     } catch (error) {
-      console.log("cancelTransaction: unable to process request");
-      throw error;
+      throw new ErrorResponse("unable to fetch all requested transactions", {
+        success: false,
+        data: undefined
+      });
     }
   }
 
@@ -287,10 +311,10 @@ export default function CollectionClient({
 
   return {
     collect,
+    getTransactions,
     cancelTransaction,
     getTransactionByRefno,
     getTransactionByTxnid,
-    getTransactions,
     getSettledTransactions,
     getAvailableProcessors
   };

@@ -130,6 +130,10 @@ describe("collection client version 1", () => {
     expect(details).toMatchObject(response);
     expect(fetch).toHaveBeenCalledTimes(1);
   });
+
+  test("able to fetch all available processors", async () => {});
+
+  test("able to fetch all available processors based on the amount", async () => {});
 });
 
 describe("collection client version 2", () => {
@@ -150,7 +154,7 @@ describe("collection client version 2", () => {
       description: "node package tests - anton palermo"
     });
 
-    console.log(transaction)
+    console.log(transaction);
 
     expect(transaction).toMatchObject({
       success: true,
