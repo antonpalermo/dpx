@@ -195,7 +195,7 @@ export default function CollectionClient({
         data: await request.json()
       };
     } catch (error) {
-      throw new ErrorResponse("unable to get transaction txnid details", {
+      throw new ErrorResponse(`Unable to locate transaction ${txnid}`, {
         success: false,
         data: undefined
       });
