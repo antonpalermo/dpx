@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/collections"
+    },
+    {
+      "path": "./packages/lifetime-id"
+    },
+    {
+      "path": "./packages/collect"
+    },
+    {
+      "path": "./packages/payouts"
+    },
+    {
+      "path": "./packages/muva"
+    }
+  ]
+}
