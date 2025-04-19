@@ -8,7 +8,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsup",
-    "test": "dotenv -e ../../.env -- jest"
+    "test": "dotenv -e ../../.env -- nx jest:test"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
