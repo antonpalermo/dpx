@@ -61,6 +61,11 @@ export function CollectionClient({
     'base64',
   )}`;
 
+  /**
+   * create a new collection transaction.
+   * @param txnid unique transaction id that represent the whole transaction.
+   * @param data data that dragonpay will process
+   */
   async function collect(txnid: string, data: Transaction) {
     try {
       const req = await fetch(`${endpoint}/${txnid}/post`, {
